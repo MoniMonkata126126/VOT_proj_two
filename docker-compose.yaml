@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=maxscale
+    depends_on:
+      - maxscale
+
+  db1:
+    build: ./database1
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: your_database
+    ports:
+      - "3307:3306"
+
+  db2:
+    build: ./database2
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: your_database
+    ports:
+      - "3308:3306"
+
+  maxscale:
+    build: ./maxscale
+    ports:
+      - "4006:4006"
+    depends_on:
+      - db1
+      - db2
